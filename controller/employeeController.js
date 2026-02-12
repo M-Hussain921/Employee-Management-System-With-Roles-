@@ -1,6 +1,5 @@
 const employee = require('../models/employeeModels');
 const user = require('../models/userModels');
-const dep = require('../models/departmentModels')
 
 exports.getallemployee = async (req, res) => {
     try {
@@ -50,11 +49,23 @@ exports.createEmployee = async (req, res) => {
 exports.searchByrole = async (req, res) => {
     const keyword = req.query.role;
     try {
-        const employees = await user.find({ role: { $regex: keyword, $options: 'i' } }).populate('department').populate('employees');
+        const employees = await user.findOne({ role: { $regex: keyword, $options: 'i' } }).populate('department');
         res.json(employees);
 
     } catch (err) {
         res.status(404).json({ message: err.message })
     }
 };
+
+exports.filterbyage=async(req,res)=>{
+    const max=parseInt((req.query.maxage));
+    const min=parseInt((req.query.minage));
+    try{
+const emp=await user.find({age:{$gte:min,$lte:max}}).populate("department");
+if(!emp) return res.status(404).json({message:"Employee Not found"})
+res.json(emp);
+    }catch(err){
+        res.status(400).json({message:err.message})
+    }
+}
 

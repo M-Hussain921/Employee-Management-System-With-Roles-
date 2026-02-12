@@ -4,7 +4,8 @@ const departmentSchema=new mongoose.Schema(
     {
         name:{type:String,required:true,unique:true},
         location:{type:String}
-    },{timestamps:true}
+    },{timestamps:true, toJSON: { virtuals: true },
+    toObject: { virtuals: true }}
 );
 
 departmentSchema.virtual("employees", {

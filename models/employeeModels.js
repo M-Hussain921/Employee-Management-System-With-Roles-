@@ -5,6 +5,12 @@ const employeeSchema = new mongoose.Schema({
     designation: { type: String },
     department: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
     salary: { type: Number }
-}, { timestamps: true });
+}, { timestamps: true,toJSON:{virtuals:true},toObject:{virtuals:true} });
 
-module.exports = mongoose.model("Employee", employeeSchema)
+employeeSchema.virtual("users",{
+    ref:"users",
+    localField:"_id",
+    foreignField:"employee"
+})
+
+module.exports = mongoose.model("Employee", employeeSchema);
