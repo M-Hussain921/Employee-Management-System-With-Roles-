@@ -13,3 +13,17 @@ exports.authMiddleware = (req, res, next) => {
         res.status(401).json({ message: "Invalid or expried token" });
     }
 };
+
+exports.isAdmin=(req,res,next)=>{
+    if(req.User.role!=="admin"){
+        return res.status(403).json({message:"only admin can delete users"});
+    }
+    next();
+};
+
+exports.isAdminOrhr=(req,res,next)=>{
+    if(req.User.role!=="admin"&&req.User.role!=="hr"){
+        return res.status(403).json({message:"only admin and hr can update user"});
+    }
+    next();
+};

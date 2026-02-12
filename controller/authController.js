@@ -16,15 +16,16 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password} = req.body;
     try {
         const user = await users.findOne({ email });
         if (!user) return res.status(404).json({ message: "user not found" });
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(401).json({ message: "Invaild Password" });
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ id: user._id, role:user.role}, process.env.JWT_SECRET);
         res.json({ message: "Login Successful", token });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-}
+};
+

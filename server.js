@@ -2,10 +2,9 @@ const express=require('express');
 const mongoose=require('mongoose');
 const dotenv=require('dotenv');
 
-// const hrRouter=require('./router/hrRouter')
-// const employeeRouter=require('./router/employeeRouter');
-// const adminRouter=require('./router/adminRouter');
+const employeeRouter=require('./router/employeeRouter');
 const authRouter=require('./router/authRouter');
+const departmentRouter=require('./router/departmantRouter');
 
 dotenv.config();
 
@@ -13,9 +12,8 @@ const app=express();
 app.use(express.json());
 
 app.use('/auth',authRouter);
-// app.use('/admin',adminRouter);
-// app.use('/hr',hrRouter);
-// app.use('/emploee',employeeRouter);
+app.use('/user',employeeRouter);
+app.use('/department',departmentRouter);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
