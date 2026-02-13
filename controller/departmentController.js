@@ -25,7 +25,7 @@ exports.getDepbyId = async (req, res) => {
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
-}
+};
 
 exports.searchBydepartment = async (req, res) => {
     const keyword = req.query.name;
@@ -36,4 +36,22 @@ exports.searchBydepartment = async (req, res) => {
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
+};
+
+exports.updateDepartment=async(req,res)=>{
+    try{
+const department=await dep.findByIdAndUpdate(req.params.id,req.body,{new:true});
+res.json(department);
+    }catch(err){
+        res.status(404).json({message:err.message});
+    }
+}
+
+exports.deleteDepartment=async(req,res)=>{
+    try{
+        const department =await dep.findByIdAndDelete(req.params.id);
+        res.json({message:"Department Delete Successfully",department})
+    } catch(err){
+res.status(404).json({message:err.message})
+    };
 };
