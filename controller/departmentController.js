@@ -18,6 +18,18 @@ exports.getDepartment = async (req, res) => {
     }
 };
 
+exports.getPublicDepartment=async(req,res)=>{
+    try{
+        const dept=await dep.find().select("name");
+        res.json(dept);
+        if (!dept.length) {
+    return res.status(404).json({ message: "No departments found" });
+}
+    } catch(err){
+        res.status(500).json({message:err.message});
+    }
+};
+
 exports.getDepbyId = async (req, res) => {
     try {
         const department = await dep.findById(req.params.id);
