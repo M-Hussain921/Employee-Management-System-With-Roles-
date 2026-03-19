@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
 
-    contactNumber: { 
+    phoneNumber: { 
         type: Number,
         required:true
      },
