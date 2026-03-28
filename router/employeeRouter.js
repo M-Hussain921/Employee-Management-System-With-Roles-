@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware, isAdmin, isAdminOrhr } = require('../middleware/authMiddleware');
-const { deleteUser, updateEmp, getemployeebyid, getallemployee, createEmployee, searchByrole,filterbyage,totalemployees,empPerDepartment,empPerRole,updateUser,deleteEmployee} = require('../controller/employeeController');
+const { deleteUser,  updateEmp, getemployeebyid, getallemployee, createEmployee, searchByrole,filterbyage,totalemployees,empPerDepartment,empPerRole,updateUser,deleteEmployee, getUserbyId} = require('../controller/employeeController');
 
+router.get('/:id',authMiddleware,getUserbyId)
 router.post('/create-employee', authMiddleware, isAdminOrhr, createEmployee);
-router.get('/all-employee', authMiddleware, isAdminOrhr, getallemployee);
+router.get('/all-employee', authMiddleware,getallemployee);
 router.get('/employee/:id', authMiddleware, getemployeebyid);
 router.get('/employee-role', authMiddleware, isAdminOrhr, searchByrole);
 router.get('/employee-age',authMiddleware,isAdminOrhr,filterbyage);

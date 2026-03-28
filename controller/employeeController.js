@@ -1,9 +1,22 @@
 const employee = require('../models/employeeModels');
 const user = require('../models/userModels');
 
+exports.getUserbyId=async (req,res)=>{
+    try{
+        const User=await user.findById(req.params.id).select("-password").populate('Employee');
+        if(!User) return res.status(404).json({message:"user Not found"});
+
+        res.json({User});
+    } catch (err){
+        res.status(400).json({message:err.message})
+    };
+}
+
 exports.getallemployee = async (req, res) => {
     try {
         const employees = await employee.find().populate('user', '-password').populate('department');
+        if(!employees) return res.status(404).json({message:"user Not found"});
+
         res.json(employees);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -12,10 +25,11 @@ exports.getallemployee = async (req, res) => {
 
 exports.getemployeebyid = async (req, res) => {
     try {
-        const employees = await employee.findById(req.params.id).populate('user', '-password').populate('department');
-        res.json(employees);
+        const employees = await employee.findOne({user:req.params.id}).populate('user', '-password').populate('department');
+        if(!employees) return res.status(404).json({message:"user Not found"});
+        res.json({data:employees});
     } catch (err) {
-        res.status(404).json({ message: "user not found" });
+        res.status(500).json({ message: "server error" });
     }
 };
 
@@ -30,8 +44,18 @@ exports.updateEmp = async (req, res) => {
 
 exports.deleteEmployee = async (req, res) => {
     try {
-        const employees = await employee.findByIdAndDelete(req.params.id);
-        res.json({ message: "user delete successfully", employees });
+        const employees = await employee.findById(req.params.id);
+        if(!employees) return res.status(404).json({ message: "Employee Not Found" });
+
+        if(employees.isDeleted) return res.status(404).json({message:"Employee Deleted"});
+
+        employees.isDeleted=true;
+        employees.deletedAt=new Data();
+
+        await employees.save();
+
+        res.json({ message: "Employee delete successfully", employees });
+
     } catch {
         res.status(404).json({ message: "user not found" });
     }
@@ -39,8 +63,59 @@ exports.deleteEmployee = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const employees = await user.findByIdAndDelete(req.params.id);
-        res.json({ message: "user delete successfully", employees });
+        const User = await user.findById(req.params.id);
+
+        if(!User) return res.status(404).json({ message: "User Not Found" });
+
+        if(User.isDeleted) return res.status(404).json({message:"User Deleted"});
+
+        User.isDeleted=true;
+        User.deletedAt=new Data();
+
+        await User.save();
+
+        res.json({ message: "User delete successfully", User });
+
+    } catch {
+        res.status(404).json({ message: "user not found" });
+    }
+};
+
+
+exports.deleteEmployee = async (req, res) => {
+    try {
+        const employees = await employee.findById(req.params.id);
+        if(!employees) return res.status(404).json({ message: "Employee Not Found" });
+
+        if(!employees.isDeleted) return res.status(404).json({message:"Employee Active"});
+
+        employees.isDeleted=false;
+        employees.restoredAt=new Data();
+
+        await employees.save();
+
+        res.json({ message: "Employee restored successfully", employees });
+
+    } catch {
+        res.status(404).json({ message: "user not found" });
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const User = await user.findById(req.params.id);
+
+        if(!User) return res.status(404).json({ message: "User Not Found" });
+
+        if(!User.isDeleted) return res.status(404).json({message:"User Active"});
+
+        User.isDeleted=false;
+        User.restoredAt=new Data();
+
+        await User.save();
+
+        res.json({ message: "User restored successfully", User });
+
     } catch {
         res.status(404).json({ message: "user not found" });
     }
@@ -88,29 +163,29 @@ exports.totalemployees = async (req, res) => {
 };
 
 exports.empPerDepartment = async (req, res) => {
-  const report = await employee.aggregate([
-    { $group: { _id: "$department", count: { $sum: 1 } } }
-  ]);
-  res.json(report);
+    const report = await employee.aggregate([
+        { $group: { _id: "$department", count: { $sum: 1 } } }
+    ]);
+    res.json(report);
 };
 
-exports.empPerRole=async(req,res)=>{
-    try{
-        const report=await user.aggregate([
-            {$group:{_id:"$role",count:{$sum:1}}}
+exports.empPerRole = async (req, res) => {
+    try {
+        const report = await user.aggregate([
+            { $group: { _id: "$role", count: { $sum: 1 } } }
         ]);
         res.json(report);
-    } catch(err){
-        res.status(404).json({message:err.message});
+    } catch (err) {
+        res.status(404).json({ message: err.message });
     }
 };
 
-exports.updateUser=async(req,res)=>{
-    const{password,contactNumber,age}=req.body;
-try{
-const users=await user.findByIdAndUpdate(req.params.id,{password,contactNumber,age},{new:true});
-res.json(users)
-}catch(err){
-    res.status(404).json({message:err.message});
-}
+exports.updateUser = async (req, res) => {
+    const { password, contactNumber, age } = req.body;
+    try {
+        const users = await user.findByIdAndUpdate(req.params.id, { password, contactNumber, age }, { new: true });
+        res.json(users)
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
 }

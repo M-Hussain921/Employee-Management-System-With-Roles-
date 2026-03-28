@@ -1,16 +1,39 @@
 const mongoose = require('mongoose');
 
 const employeeSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
-    designation: { type: String },
-    department: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
-    salary: { type: Number }
-}, { timestamps: true,toJSON:{virtuals:true},toObject:{virtuals:true} });
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+        required: true
+    },
 
-employeeSchema.virtual("users",{
-    ref:"users",
-    localField:"_id",
-    foreignField:"employee"
-})
+    designation: { type: String },
+
+    department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Department"
+    },
+
+    salary: { type: Number },
+
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+
+    deletedAt: {
+        type: Date,
+        default: null
+    },
+
+    restoredAt: {
+        type: Date,
+        default: null
+    }
+
+}, {
+    timestamps: true,
+});
+
 
 module.exports = mongoose.model("Employee", employeeSchema);

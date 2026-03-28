@@ -1,18 +1,42 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
-const departmentSchema=new mongoose.Schema(
+const departmentSchema = new mongoose.Schema(
     {
-        name:{type:String,required:true,unique:true},
-        location:{type:String}
-    },{timestamps:true, toJSON: { virtuals: true },
-    toObject: { virtuals: true }}
+        name: {
+            type: String,
+            required: true,
+            unique: true
+        },
+
+        location: { type: String },
+
+        isDeleted: {
+            type: Boolean,
+            default: false
+        },
+
+        deletedAt: {
+            type: Date,
+            default: null
+        },
+
+        restoredAt: {
+            type: Date,
+            default: null
+        }
+
+    }, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+}
 );
 
 departmentSchema.virtual("employees", {
-  ref: "Employee",
-  localField: "_id",
-  foreignField: "department",
+    ref: "Employee",
+    localField: "_id",
+    foreignField: "department",
 });
 
 
-module.exports=mongoose.model("Department",departmentSchema);
+module.exports = mongoose.model("Department", departmentSchema);

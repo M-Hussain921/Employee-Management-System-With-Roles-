@@ -3,13 +3,16 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
 
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim:true,
+        lowercase:true
     },
 
     password: {
@@ -17,27 +20,36 @@ const userSchema = new mongoose.Schema({
         required: true
     },
 
-    phoneNumber: { 
+    phoneNumber: {
         type: Number,
-        required:true
-     },
+        required: true
+    },
 
-    age: { 
+    age: {
         type: Number,
-    required:true
+        required: true
     },
 
     role: {
         type: String,
         required: true,
-        enum: ["super_admin","admin", "hr", "employee"],
+        enum: ["super_admin", "admin", "hr", "employee"],
         default: "employee"
     },
 
-    department: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Department",
-        required: false
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
+
+    deletedAt: {
+        type: Date,
+        default: null
+    },
+
+    restoredAt: {
+        type: Date,
+        default: null
     }
 
 }, { timestamps: true });

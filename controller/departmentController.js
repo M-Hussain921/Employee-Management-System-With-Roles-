@@ -18,15 +18,15 @@ exports.getDepartment = async (req, res) => {
     }
 };
 
-exports.getPublicDepartment=async(req,res)=>{
-    try{
-        const dept=await dep.find().select("name");
-        res.json(dept);
+exports.getPublicDepartment = async (req, res) => {
+    try {
+        const dept = await dep.find().select("_id name");
         if (!dept.length) {
-    return res.status(404).json({ message: "No departments found" });
-}
-    } catch(err){
-        res.status(500).json({message:err.message});
+            return res.status(404).json({ message: "No departments found" });
+        }
+        res.status(200).json(dept);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 };
 
@@ -50,20 +50,20 @@ exports.searchBydepartment = async (req, res) => {
     }
 };
 
-exports.updateDepartment=async(req,res)=>{
-    try{
-const department=await dep.findByIdAndUpdate(req.params.id,req.body,{new:true});
-res.json(department);
-    }catch(err){
-        res.status(404).json({message:err.message});
+exports.updateDepartment = async (req, res) => {
+    try {
+        const department = await dep.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(department);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
     }
 }
 
-exports.deleteDepartment=async(req,res)=>{
-    try{
-        const department =await dep.findByIdAndDelete(req.params.id);
-        res.json({message:"Department Delete Successfully",department})
-    } catch(err){
-res.status(404).json({message:err.message})
+exports.deleteDepartment = async (req, res) => {
+    try {
+        const department = await dep.findByIdAndDelete(req.params.id);
+        res.json({ message: "Department Delete Successfully", department })
+    } catch (err) {
+        res.status(404).json({ message: err.message })
     };
 };
