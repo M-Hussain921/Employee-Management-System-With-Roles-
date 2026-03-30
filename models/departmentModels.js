@@ -8,6 +8,17 @@ const departmentSchema = new mongoose.Schema(
             unique: true
         },
 
+        head:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Employee",
+            required:true,
+        },
+
+        budget:{
+            type:Number,
+            required:true
+        },
+
         location: { type: String },
 
         isDeleted: {
