@@ -11,7 +11,13 @@ exports.createDepartment = async (req, res) => {
 
 exports.getDepartment = async (req, res) => {
     try {
-        const departments = await dep.find();
+        const departments = await dep.find().populate({
+            path: "head",
+            populate: {
+                path: "user",
+                select: "name email"
+            }
+        }).populate('employees');
         res.json(departments);
     } catch (err) {
         res.status(404).json({ message: err.message });
