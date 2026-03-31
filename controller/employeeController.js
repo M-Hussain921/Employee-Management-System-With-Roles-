@@ -1,6 +1,17 @@
 const employee = require('../models/employeeModels');
 const user = require('../models/userModels');
 
+exports.editUser=async(req,res)=>{
+    try{
+        const{name,email,phoneNumber,age}=req.body;
+        const U=await user.findByIdAndUpdate(req.params.id,{name,email,phoneNumber,age},{new:true});
+        if(!U) return res.status(404).json({message:"User not found"});
+        res.status(200).json({message:"user updated successfully",data:U});
+    } catch(err){
+        res.status(500).json({message:err.message});
+    }
+};
+
 exports.getUserbyId=async (req,res)=>{
     try{
         const User=await user.findById(req.params.id).select("-password").populate('Employee');
