@@ -21,7 +21,7 @@ app.use(
   })
 );
 
-app.use("api/images", express.static(path.join(__dirname, "public/images")));
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.get("/forms-page-image", (req, res) => {
   res.json({
