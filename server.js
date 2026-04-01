@@ -17,7 +17,7 @@ app.use(cors());
 
 app.use(
   cors({
-    origin: "http://localhost:5174",
+    origin: "*",
   })
 );
 
@@ -25,13 +25,13 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.get("/forms-page-image", (req, res) => {
   res.json({
-    image: "http://localhost:8000/images/forms-page-bg.jpg"
+    image: `${req.protocol}://${req.get("host")}/images/forms-page-bg.jpg`
   });
 });
 
-app.use('/auth',authRouter);
-app.use('/user',employeeRouter);
-app.use('/department',departmentRouter);
+app.use('/api/auth',authRouter);
+app.use('/api/user',employeeRouter);
+app.use('/api/department',departmentRouter);
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
@@ -40,4 +40,4 @@ mongoose.connect(process.env.MONGO_URI)
 
 const PORT=process.env.PORT||8000;
 
-app.listen(PORT,()=>console.log(`Server is running at http://localhost:${PORT}`));
+app.listen(PORT,()=>console.log(`Server is running on${PORT}`));
