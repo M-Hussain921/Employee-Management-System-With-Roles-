@@ -1,7 +1,7 @@
 const express=require('express');
 const router=express.Router();
 
-const {authMiddleware,isAdminOrhr,isAdmin}=require('../middleware/authMiddleware');
+const {authMiddleware,isAdminOrhr,isAdmin}=require('../middleware/authMiddleware.js');
 const {createDepartment,getDepartment,getDepbyId,searchBydepartment,getPublicDepartment,deleteDepartment,updateDepartment}=require('../controller/departmentController');
 
 router.get('/all-department',authMiddleware,getDepartment);
