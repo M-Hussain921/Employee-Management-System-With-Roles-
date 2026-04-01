@@ -23,7 +23,7 @@ app.use(
 
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
-app.get("/forms-page-image", (req, res) => {
+app.get("/api/forms-page-image", (req, res) => {
   res.json({
     image: `${req.protocol}://${req.get("host")}/images/forms-page-bg.jpg`
   });
