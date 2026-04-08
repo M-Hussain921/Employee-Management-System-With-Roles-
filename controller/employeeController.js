@@ -192,9 +192,9 @@ exports.empPerRole = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const { password, contactNumber, age } = req.body;
+    const { name,email, phoneNumber } = req.body;
     try {
-        const users = await user.findByIdAndUpdate(req.params.id, { password, contactNumber, age }, { new: true });
+        const users = await user.findByIdAndUpdate(req.params.id, { name,email, phoneNumber }, { new: true });
         res.json(users)
     } catch (err) {
         res.status(404).json({ message: err.message });
