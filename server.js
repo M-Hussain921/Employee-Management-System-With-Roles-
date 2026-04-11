@@ -4,12 +4,13 @@ const dotenv=require('dotenv');
 const cors =require('cors');
 const path = require("path");
 
+dotenv.config();
 
 const employeeRouter=require('./router/employeeRouter');
 const authRouter=require('./router/authRouter');
 const departmentRouter=require('./router/departmantRouter');
 
-dotenv.config();
+
 
 const app=express();
 app.use(express.json());
