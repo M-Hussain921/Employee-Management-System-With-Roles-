@@ -1,13 +1,13 @@
 const nodemailer = require("nodemailer");
 
-const getWelcomeTemplate = (name, designation, department,tempPassword) => `
+const getWelcomeTemplate = (name, department, designation, tempPassword) => `
 <!DOCTYPE html>
 <html>
 <head>
   <style>
     body { font-family: Arial; background:#f4f4f4; padding:20px; }
     .container { background:#fff; padding:20px; border-radius:10px; }
-    .header { background:#4CAF50; color:white; display:flex; gap:5px padding:10px; text-align:center; }
+    .header { background:#4CAF50; color:white; display:flex; gap:5px; padding:10px; text-align:center; }
     .content { margin-top:20px; }
     .footer { margin-top:20px; font-size:12px; color:#777; }
   </style>

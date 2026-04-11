@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 
 exports.createEmpFull = async (req, res) => {
-    const { name, email, password, phoneNumber, age, salary, designation, department } = req.body;
+    const { name, email, password, phoneNumber, age, salary,department ,designation  } = req.body;
     try {
         const isUser = await user.findOne({ email });
         if (isUser) return res.status(400).json({ message: "user already exist" });
@@ -33,6 +33,9 @@ exports.createEmpFull = async (req, res) => {
             "Welcome to Company",
             getWelcomeTemplate(name, populatedEmp.department.name, designation,tempPassword)
         );
+
+        console.log(populatedEmp.department.name)
+         console.log(designation)
 
         res.status(200).json({
             message: "Employee created successfully",
