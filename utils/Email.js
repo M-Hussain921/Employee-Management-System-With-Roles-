@@ -7,7 +7,7 @@ const getWelcomeTemplate = (name, department, designation, tempPassword) => `
   <style>
     body { font-family: Arial; background:#f4f4f4; padding:20px; }
     .container { background:#fff; padding:20px; border-radius:10px; }
-    .header { background:#4CAF50; color:white; display:flex; gap:5px; padding:10px; text-align:center; }
+    .header { background:#4CAF50; color:white;  padding:10px; text-align:center; }
     .content { margin-top:20px; }
     .footer { margin-top:20px; font-size:12px; color:#777; }
   </style>
@@ -15,7 +15,6 @@ const getWelcomeTemplate = (name, department, designation, tempPassword) => `
 <body>
   <div class="container">
     <div class="header">
-    <img src="assets/logo/workSphere-logo.png" width="120" />
       <h2>Welcome to WorkSphere</h2>
     </div>
 
