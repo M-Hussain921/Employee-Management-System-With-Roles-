@@ -64,7 +64,7 @@ exports.getUserbyId = async (req, res) => {
 
         res.json({ User });
     } catch (err) {
-        res.status(400).json({ message: err.message })
+        res.status(500).json({ message: err.message })
     };
 }
 
@@ -100,20 +100,23 @@ exports.updateEmp = async (req, res) => {
 
 exports.deleteEmployee = async (req, res) => {
     try {
-        const employees = await employee.findById(req.params.id);
+        const employees = await employee.findOne({ user: req.params.id });
         if (!employees) return res.status(404).json({ message: "Employee Not Found" });
 
-        if (employees.isDeleted) return res.status(404).json({ message: "Employee Deleted" });
+        if (employees.isDeleted) return res.status(400).json({ message: "Employee already Deleted" });
 
         employees.isDeleted = true;
         employees.deletedAt = new Date();
-
         await employees.save();
 
         res.json({ message: "Employee delete successfully", employees });
 
-    } catch {
-        res.status(404).json({ message: "user not found" });
+    }  catch (error) {
+        console.error("Delete employee error:", error);
+        if (error.name === "CastError") {
+            return res.status(400).json({ message: "Invalid employee ID" });
+        }
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -138,7 +141,7 @@ exports.deleteUser = async (req, res) => {
 };
 
 
-exports.deleteEmployee = async (req, res) => {
+exports.restoreEmployee = async (req, res) => {
     try {
         const employees = await employee.findById(req.params.id);
         if (!employees) return res.status(404).json({ message: "Employee Not Found" });
@@ -157,7 +160,7 @@ exports.deleteEmployee = async (req, res) => {
     }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.restoreUser = async (req, res) => {
     try {
         const User = await user.findById(req.params.id);
 
