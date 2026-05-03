@@ -1,8 +1,8 @@
 const employee = require('../models/employeeModels');
 const user = require('../models/userModels');
-const { sendEmail, getWelcomeTemplate } = require('../utils/Email');
+const { sendEmail } = require('../utils/Email');
+const { getWelcomeTemplate,getOTPTemplate } = require('../utils/emailTemplates');
 const bcrypt = require('bcrypt');
-
 
 exports.createEmpFull = async (req, res) => {
     const { name, email, password, phoneNumber, age, salary,department ,designation  } = req.body;
