@@ -3,6 +3,62 @@ const user = require('../models/userModels');
 const { sendEmail } = require('../utils/Email');
 const { getWelcomeTemplate,getOTPTemplate } = require('../utils/emailTemplates');
 const bcrypt = require('bcrypt');
+const crypto =require('crypto');
+
+exports.forgotPasswordOTP = async (req, res, next) => {
+  try {
+    const { email, phone } = req.body; 
+
+    let user;
+    if (email) {
+      user = await User.findOne({ email });
+    } else if (phone) {
+      user = await User.findOne({ phone });
+    }
+
+    if (!user) {
+      return res.status(200).json({
+        success: true,
+        message: 'If that account exists, an OTP has been sent.',
+      });
+    }
+
+    const rawOTP = generateOTP();   
+
+    const hashedOTP = crypto
+      .createHash('sha256')
+      .update(rawOTP)
+      .digest('hex');
+
+    user.otp = hashedOTP;
+    user.otpExpire = Date.now() + 5 * 60 * 1000; 
+    user.otpAttempts = 0;  
+    await user.save({ validateBeforeSave: false });
+
+    try {
+      if (email) {
+        await sendOTPEmail({ email: user.email, otp: rawOTP });
+      } else if (phone) {
+        await sendOTPSMS({ phone: user.phone, otp: rawOTP });
+      }
+      res.status(200).json({
+        success: true,
+        message: 'OTP sent successfully.',
+      });
+    } catch (sendError) {
+      user.otp = undefined;
+      user.otpExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return res.status(500).json({
+        success: false,
+        message: 'OTP could not be sent. Please try again later.',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.createEmpFull = async (req, res) => {
     const { name, email, password, phoneNumber, age, salary,department ,designation  } = req.body;
