@@ -28,14 +28,13 @@ exports.createEmpFull = async (req, res) => {
 
         const populatedEmp = await employee.findById(newEmployee._id).populate("department");
 
+        const deptName = populatedEmp?.department?.name || "N/A";
+
         await sendEmail(
             email,
             "Welcome to Company",
-            getWelcomeTemplate(name, populatedEmp.department.name, designation,tempPassword)
+            getWelcomeTemplate(name, deptName, designation,tempPassword)
         );
-
-        console.log(populatedEmp.department.name)
-         console.log(designation)
 
         res.status(200).json({
             message: "Employee created successfully",
@@ -85,7 +84,8 @@ exports.getemployeebyid = async (req, res) => {
         if (!employees) return res.status(404).json({ message: "user Not found" });
         res.json({ data: employees });
     } catch (err) {
-        res.status(500).json({ message: "server error" });
+       console.error("GET EMPLOYEE ERROR:",err);
+       res.status(500).json({message:err.message});
     }
 };
 
@@ -135,8 +135,12 @@ exports.deleteUser = async (req, res) => {
 
         res.json({ message: "User delete successfully", User });
 
-    } catch {
-        res.status(404).json({ message: "user not found" });
+    } catch (error) {
+        console.error("Delete User error:", error);
+        if (error.name === "CastError") {
+            return res.status(400).json({ message: "Invalid employee ID" });
+        }
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -155,8 +159,12 @@ exports.restoreEmployee = async (req, res) => {
 
         res.json({ message: "Employee restored successfully", employees });
 
-    } catch {
-        res.status(404).json({ message: "user not found" });
+    } catch (error) {
+        console.error("restored employee error:", error);
+        if (error.name === "CastError") {
+            return res.status(400).json({ message: "Invalid employee ID" });
+        }
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -175,8 +183,12 @@ exports.restoreUser = async (req, res) => {
 
         res.json({ message: "User restored successfully", User });
 
-    } catch {
-        res.status(404).json({ message: "user not found" });
+    } catch (error) {
+        console.error("restored employee error:", error);
+        if (error.name === "CastError") {
+            return res.status(400).json({ message: "Invalid employee ID" });
+        }
+        res.status(500).json({ message: "Server error" });
     }
 };
 
